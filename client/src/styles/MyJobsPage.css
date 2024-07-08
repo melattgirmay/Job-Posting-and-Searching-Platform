@@ -1,0 +1,16 @@
+/* Job-Posting-and-Searching-Platform\client\src\styles\MyJobsPage.css */
+.user-homepage {
+    display: flex;
+  }
+  
+  .main-content {
+    width: calc(100% - 250px);
+    background: #ffffff;
+    min-height: 100vh;
+    border-radius: 5px;
+  }
+  
+  .content {
+    padding: 20px;
+  }
+  

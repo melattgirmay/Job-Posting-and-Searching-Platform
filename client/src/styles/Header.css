@@ -1,0 +1,78 @@
+/* Job-Posting-and-Searching-Platform\client\src\styles\Header.css */
+
+.header-container {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  padding-left: 35px;
+  padding-right: 35px;
+  justify-content: space-between;
+  background: #2596bed8;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.441);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.search-input {
+  width: 300px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-button {
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: rgba(231, 84, 128, 0.712);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  right: -35px;
+  top: 65px;
+  border-radius: 5px;
+  min-width: 160px;
+}
+
+.dropdown-content.show {
+  display: block;
+}
+
+.dropdown-item {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: rgb(231, 84, 128);
+}
+
+.user-initials {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: rgb(231, 50, 150);
+  color: white;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+}

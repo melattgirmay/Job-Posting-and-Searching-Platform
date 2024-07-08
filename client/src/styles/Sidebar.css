@@ -1,0 +1,33 @@
+/* Job-Posting-and-Searching-Platform\client\src\styles\Sidebar.css */
+
+.sidebar-container {
+  width: 230px;
+  height: 94vh;
+  padding: 20px;
+  background: #2596bed8;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.441);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  margin-top: 70px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.sidebar-item:hover {
+  transform: scale(1.2);
+}
+
+.sidebar-icon {
+  margin-right: 15px;
+  margin-left: 20px;
+  font-size: 20px;
+}
