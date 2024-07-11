@@ -1,0 +1,138 @@
+/* client/src/styles/JobSearchPage.css */
+
+.job-search-page {
+    font-family: 'Arial, sans-serif';
+    padding: 20px;
+    background-color: #f4f4f9;
+  }
+  
+  .job-search-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header-left input {
+    margin-right: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 230px;
+  }
+  
+  .header-left select {
+    margin-right: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 150px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .header-right span {
+    margin-right: 10px;
+  }
+
+  main {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .header-right input[type="range"] {
+    width: 200px;
+  }
+  
+  .filters {
+    width: 20%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .filters h2, .filters h3 {
+    margin-bottom: 10px;
+  }
+  
+  .filters label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .recommended-jobs {
+    width: 75%;
+  }
+  
+  .recommended-jobs h2 {
+    margin-bottom: 20px;
+  }
+  
+  .job-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .job-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: calc(33% - 20px);
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .job-card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .job-card-body h3 {
+    margin: 10px 0;
+  }
+  
+  .job-card-body p {
+    margin: 5px 0;
+    color: #555;
+  }
+  
+  .tags span {
+    background-color: #eee;
+    border-radius: 5px;
+    padding: 5px;
+    margin-right: 5px;
+  }
+  
+  .job-card-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .details-button {
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    align-self: flex-end;
+  }
+  
+  .details-button:hover {
+    background-color: #0056b3;
+  }
+  
