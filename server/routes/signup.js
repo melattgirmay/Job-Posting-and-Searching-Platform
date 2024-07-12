@@ -5,11 +5,11 @@ const db = require('../db');
 
 // POST /api/signup
 router.post('/', async (req, res) => {
-  const { firstName, middleName, lastName, email, phoneNumber, country, city, password, gender } = req.body;
+  const { firstName, middleName, lastName, email, phoneNumber, location, password, gender } = req.body;
 
   try {
     // Example query to insert user into MySQL database
-    const [results, fields] = await db.execute('INSERT INTO users (firstName, middleName, lastName, email, phoneNumber, country, city, password, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [firstName, middleName, lastName, email, phoneNumber, country, city, password, gender]);
+    const [results, fields] = await db.execute('INSERT INTO users (firstName, middleName, lastName, email, phoneNumber, location, password, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [firstName, middleName, lastName, email, phoneNumber, location, password, gender]);
 
     res.json({ success: true, message: 'User registered successfully' });
   } catch (error) {

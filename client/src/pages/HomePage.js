@@ -29,7 +29,7 @@ function HomePage() {
             Our platform offers a wide range of job listings, 
             from entry-level positions to senior executive roles.
           </p>
-          <a href="/login"><button> Log in</button></a>
+          <Link to="/login"><button> Log in</button></Link>
         </div>
       </div>
     </div>

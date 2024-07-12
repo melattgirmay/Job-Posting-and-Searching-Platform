@@ -1,31 +1,31 @@
-// Job-Posting-and-Searching-Platform\server\server.js
-
-// Import necessary modules
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const mysql = require('mysql2');
 const session = require('express-session');
-const cookieParser = require('cookie-parser');
+const crypto = require('crypto');
+const bcrypt = require('bcrypt'); // Added bcrypt for password hashing
 
-// Create Express app
 const app = express();
-app.use(bodyParser.json());
-// CORS middleware setup
-app.use(cors({
-  origin: 'http://localhost:3000', // Allow requests from this origin
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], // Allow these HTTP methods
-  allowedHeaders: ['Content-Type'], // Allow these headers
-}));
+app.use(express.json()); // Use built-in JSON parser for parsing application/json
 
-app.use(cookieParser());
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type'],
+  credentials: true, // Allow credentials like cookies
+};
+
+app.use(cors(corsOptions));
+
+const sessionSecret = crypto.randomBytes(32).toString('hex');
+
 app.use(session({
-  secret: 'secret', // Use a secure random string for production
-  resave: true,
+  secret: sessionSecret,
+  resave: false,
   saveUninitialized: true,
 }));
 
-// Database connection setup
+
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -33,7 +33,6 @@ const db = mysql.createConnection({
   database: 'jobplatform',
 });
 
-// Connect to the database
 db.connect((err) => {
   if (err) {
     console.error('Error connecting to the database:', err.stack);
@@ -42,26 +41,44 @@ db.connect((err) => {
   console.log('Connected to the database');
 });
 
-// Handle database errors
 db.on('error', (err) => {
   console.error('Database error:', err);
 });
 
-// Middleware to check if user is logged in
-const checkLoggedIn = (req, res, next) => {
+// Endpoint to post a job
+app.post('/api/postJob', checkLoggedIn, async (req, res) => {
+  const { title, location, type, level, salary, description, responsibilities, requirements, remoteOption } = req.body;
+  const userId = req.session.userId; // Assuming userId is stored in session
+
+  const query = 'INSERT INTO jobs (title, location, type, level, salary, description, responsibilities, requirements, remote_option, userId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  const values = [title, location, type, level, salary, description, responsibilities, requirements, remoteOption, userId];
+
+  try {
+    await db.promise().query(query, values); // Assuming you are using mysql2's promise mode
+    res.status(200).json({ message: 'Job posted successfully' });
+  } catch (err) {
+    console.error('Error posting job:', err);
+    res.status(500).json({ message: 'Failed to post job' });
+  }
+});
+
+function checkLoggedIn(req, res, next) {
   if (req.session.userId) {
     next(); // User is logged in, proceed to the next middleware
   } else {
     res.status(401).json({ success: false, message: 'Unauthorized access' });
   }
-};
+}
 
 // Endpoint to handle user signup
-app.post('/api/signup', (req, res) => {
-  const { firstName, middleName, lastName, email, phoneNumber, country, city, password, gender } = req.body;
+app.post('/api/signup', async (req, res) => {
+  const { firstName, middleName, lastName, email, phoneNumber, location, password, gender } = req.body;
 
-  const query = 'INSERT INTO users (firstName, middleName, lastName, email, phoneNumber, country, city, password, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-  const values = [firstName, middleName, lastName, email, phoneNumber, country, city, password, gender];
+  // Hash the password before storing
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const query = 'INSERT INTO users (firstName, middleName, lastName, email, phoneNumber, location, password, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+  const values = [firstName, middleName, lastName, email, phoneNumber, location, hashedPassword, gender];
 
   db.query(query, values, (err, result) => {
     if (err) {
@@ -75,25 +92,12 @@ app.post('/api/signup', (req, res) => {
   });
 });
 
-// Example email validation function
-const validateEmail = (email) => {
-  const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return re.test(String(email).toLowerCase());
-};
-
-// Example password validation function
-const validatePassword = (password) => {
-  const re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-  return re.test(password);
-};
-
-
 // Endpoint to handle user login
 app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
 
   const query = 'SELECT * FROM users WHERE email = ?';
-  db.query(query, [email], (err, results) => {
+  db.query(query, [email], async (err, results) => {
     if (err) {
       console.error('Error querying the database:', err);
       return res.status(500).json({ message: 'An error occurred. Please try again.' });
@@ -104,13 +108,36 @@ app.post('/api/login', (req, res) => {
     }
 
     const user = results[0];
-    // Compare the provided password with the stored password (hash comparison recommended)
-    if (password === user.password) {
-      // Generate a token or create a session here
+    // Compare the provided password with the stored hashed password
+    const match = await bcrypt.compare(password, user.password);
+    if (match) {
+      req.session.userId = user.id;
       return res.status(200).json({ message: 'Login successful', user });
     } else {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
+  });
+});
+
+// Endpoint to fetch user data by email
+app.get('/api/user/:email', (req, res) => {
+  const { email } = req.params;
+
+  const sql = `SELECT * FROM users WHERE email = ?`;
+
+  db.query(sql, [email], (err, results) => {
+    if (err) {
+      console.error('Error fetching user data:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const userData = results[0]; // Assuming email is unique, get the first result
+
+    res.json(userData);
   });
 });
 
@@ -127,10 +154,10 @@ app.post('/api/logout', (req, res) => {
   });
 });
 
-// Example endpoint to fetch user data
+// Endpoint to fetch user data
 app.get('/api/user', checkLoggedIn, (req, res) => {
   const userId = req.session.userId;
-  const getUserQuery = 'SELECT id, fullName, email FROM users WHERE id = ?';
+  const getUserQuery = 'SELECT id, firstName, middleName, lastName, email FROM users WHERE id = ?';
   db.query(getUserQuery, [userId], (err, results) => {
     if (err) {
       console.error('Error fetching user data:', err);
@@ -140,6 +167,20 @@ app.get('/api/user', checkLoggedIn, (req, res) => {
     const user = results[0];
     res.status(200).json({ success: true, user });
   });
+});
+
+// Middleware to check if user is authenticated
+const isAuthenticated = (req, res, next) => {
+  if (req.session.userId) { // Adjust accordingly based on your session setup
+    next(); // User is authenticated, proceed to the next middleware or route handler
+  } else {
+    res.status(401).json({ message: 'Unauthorized' });
+  }
+};
+
+app.get('/userhomepage', isAuthenticated, (req, res) => {
+  // Serve the userhomepage when authenticated
+  res.sendFile(path.join(__dirname, 'public', 'userhomepage.html'));
 });
 
 // Start the server

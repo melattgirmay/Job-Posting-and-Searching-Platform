@@ -4,14 +4,15 @@
     justify-content: center;
     align-items: center;
     width: 80%;
-    margin: 3%;
+    margin: 1%;
     margin-left: 120px;
     background: rgba(255, 255, 255, 0.687);
     box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.441);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-radius: 10px;
-    overflow: hidden;
+    max-height: 100vh;
+    overflow-y: auto;
   }
   
   .signup-container {
@@ -35,7 +36,7 @@
   
   .right-section {
     flex: 1;
-    padding: 40px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -44,19 +45,20 @@
   .right-section h2 {
     margin-bottom: 20px;
     color: #000000;
+    text-align: start;
   }
   
   .form-row {
     display: flex;
     justify-content: space-between;
-    gap: 20px;
+    gap: 10px;
   }
   
   .form-group {
     flex: 1;
     display: flex;
     flex-direction: column;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
   }
   
   .form-group label {
@@ -66,7 +68,7 @@
   }
   
   .form-group input {
-    padding: 10px;
+    padding: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
@@ -105,7 +107,7 @@
   p {
     margin-top: 20px;
     text-align: center;
-    color: #000000;
+    color: #000 !important;
   }
   
   p a {

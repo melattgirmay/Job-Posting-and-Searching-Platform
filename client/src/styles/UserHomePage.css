@@ -1,17 +1,182 @@
-/* Job-Posting-and-Searching-Platform\client\src\styles\UserHomePage.css */
+body, html {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
 
 .user-homepage {
-    display: flex;
-  }
-  
-  .main-content {
-    width: calc(100% - 230px);
-    background: #ffffff;
-    min-height: 100vh;
-    border-radius: 5px;
-  }
-  
-  .content {
-    padding: 20px;
-  }
-  
+  display: flex;
+  background: rgba(255, 255, 255, 0.644);
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.441);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  width: 100%;
+  height: 100vh; /* Use viewport height to cover the entire height of the screen */
+}
+
+.main-content {
+  flex: 1; /* Occupy remaining space */
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensure it takes full height */
+}
+
+.content {
+  flex: 1; /* Occupy remaining vertical space */
+  padding: 20px;
+  overflow-y: auto; /* Enable vertical scrolling for content */
+}
+
+.profile-and-jobs {
+  display: flex;
+  width: auto;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.profile-card {
+  width: 60%;
+  padding: 20px;
+  margin-left: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 5px rgba(85, 39, 39, 0.1);/* Adjust width as needed */
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.profile-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-right: 20px;
+  background-color: palevioletred;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.profile-name {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.profile-role,
+.profile-location {
+  color: gray;
+  margin: 5px 0;
+}
+
+.profile-details  {
+  display: flex;
+  flex-direction: row;
+  margin-left: 20px;
+  margin-right: 20px;
+  justify-content: space-between;
+}
+
+.profile-questions p {
+  text-align: left;
+  color: black;
+}
+
+.profile-answers p {
+  text-align: right;
+  color: black;
+}
+
+.job-listings {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 40%;
+  border-radius: 10px;
+  margin-right: 20px;
+}
+
+.status, .post-a-job {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 90%;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  cursor: pointer;
+  box-shadow: 0 0 10px 5px rgb(216, 200, 200); /* Optional margin-bottom to separate job cards */
+}
+
+.job-header {
+  margin-bottom: 20px;
+}
+
+.job-title {
+  font-size: 18px;
+  margin: 0;
+}
+
+.company-name,
+.job-salary,
+.job-location {
+  color: gray;
+  margin: 5px 0;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+}
+
+.stat-card {
+  text-align: center;
+  margin: 20px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  flex: 1;
+}
+
+.stat-number {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  border: 10px solid #ccc; /* Default border color */
+  border-radius: 50%; /* Makes it circular */
+  line-height: 60px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px;
+}
+
+.stat-number::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
+  border: 5px solid transparent;
+  border-top-color: green; /* Green color for progress */
+  border-radius: 50%; /* Makes it circular */
+  transform: rotate(90deg);
+  z-index: -1;
+}
+
+[data-progress] {
+  overflow: hidden;
+}
+

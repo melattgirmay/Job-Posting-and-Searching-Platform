@@ -1,4 +1,3 @@
-//Job-Posting-and-Searching-Platform\client\src\pages\SignUp.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/SignUp.css';
@@ -53,7 +52,10 @@ const SignUp = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          location: `${formData.country}, ${formData.city}`, // Combine country and city into location
+        }),
       });
 
       const result = await response.json();
@@ -90,7 +92,7 @@ const SignUp = () => {
           <img src={registrationImage} alt="Registration" />
         </div>
         <div className="right-section">
-          <h1>Registration</h1>
+          <h2>Registration</h2>
           {error && <p className="error">{error}</p>}
           {success && <p className="success">{success}</p>}
           <form onSubmit={handleSubmit}>
@@ -246,4 +248,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-

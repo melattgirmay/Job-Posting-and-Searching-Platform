@@ -1,4 +1,3 @@
-// Job-Posting-and-Searching-Platform\client\src\pages\Login.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
@@ -12,7 +11,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
-
+  
     try {
       const response = await fetch('http://localhost:5000/api/login', {
         method: 'POST',
@@ -20,13 +19,13 @@ const Login = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
-      });
-
+        credentials: 'include', // Include credentials in the request
+      });      
+  
       const data = await response.json();
-
+  
       if (response.ok) {
-        // Save token or user info in local storage or context
-        // Redirect to the dashboard or user home page
+        // Save user info in local storage or context
         localStorage.setItem('user', JSON.stringify(data.user));
         navigate('/userhomepage');
       } else {
@@ -36,7 +35,7 @@ const Login = () => {
       console.error('Error:', error);
       setError('An error occurred. Please try again.');
     }
-  };
+  };  
 
   return (
     <div className="login-wrapper">
@@ -48,7 +47,6 @@ const Login = () => {
           <label htmlFor="email">Email</label>
           <input
             type="email"
-            id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -58,7 +56,6 @@ const Login = () => {
           <label htmlFor="password">Password</label>
           <input
             type="password"
-            id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -66,7 +63,7 @@ const Login = () => {
         </div>
         <button type="submit">Login</button>
       </form>
-    </div>
+      </div>
     </div>
   );
 };

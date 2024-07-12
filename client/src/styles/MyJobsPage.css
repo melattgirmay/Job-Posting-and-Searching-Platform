@@ -1,16 +1,12 @@
-/* Job-Posting-and-Searching-Platform\client\src\styles\MyJobsPage.css */
-.user-homepage {
-    display: flex;
-  }
-  
-  .main-content {
-    width: calc(100% - 250px);
-    background: #ffffff;
-    min-height: 100vh;
-    border-radius: 5px;
-  }
-  
-  .content {
+
+.my-jobs-page {
+    font-family: 'Arial, sans-serif';
     padding: 20px;
+    padding-top: 5px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Set full viewport height */
+    overflow: hidden; /* Hide overflow to prevent double scrollbars */
   }
-  
