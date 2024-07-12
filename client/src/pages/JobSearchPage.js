@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axiosInstance from '../axiosConfig';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import { IoBookmark } from "react-icons/io5";
@@ -6,25 +7,60 @@ import '../styles/JobSearchPage.css';
 
 const JobSearchPage = () => {
   const [user, setUser] = useState(null);
+  const [jobs, setJobs] = useState([]);
+  const [searchParams, setSearchParams] = useState({
+    title: '',
+    location: '',
+    createdAt: '',
+    salary: '',
+    type: '',
+    remoteOption: '',
+    level: '',
+  });
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+    fetchJobs();
   }, []);
 
-  const jobs = [
-    { id: 1, date: '20 May, 2023', company: 'Amazon', title: 'Senior UI/UX Designer', type: 'Part time', level: 'Senior level', location: 'Remote', salary: '$250/hr', locationDetails: 'San Francisco, CA' },
-    { id: 2, date: '4 Feb, 2023', company: 'Google', title: 'Junior UI/UX Designer', type: 'Full time', level: 'Junior level', location: 'Remote', salary: '$150/hr', locationDetails: 'California, CA' },
-    { id: 3, date: '29 Jan, 2023', company: 'Dribbble', title: 'Senior Motion Designer', type: 'Part time', level: 'Senior level', location: 'On-site', salary: '$260/hr', locationDetails: 'New York, NY' },
-    { id: 4, date: '20 May, 2023', company: 'Amazon', title: 'Senior UI/UX Designer', type: 'Part time', level: 'Senior level', location: 'Remote', salary: '$250/hr', locationDetails: 'San Francisco, CA' },
-    { id: 5, date: '4 Feb, 2023', company: 'Google', title: 'Junior UI/UX Designer', type: 'Full time', level: 'Junior level', location: 'Remote', salary: '$150/hr', locationDetails: 'California, CA' },
-    { id: 6, date: '29 Jan, 2023', company: 'Dribbble', title: 'Senior Motion Designer', type: 'Part time', level: 'Senior level', location: 'On-site', salary: '$260/hr', locationDetails: 'New York, NY' },
-    { id: 7, date: '20 May, 2023', company: 'Amazon', title: 'Senior UI/UX Designer', type: 'Part time', level: 'Senior level', location: 'Remote', salary: '$250/hr', locationDetails: 'San Francisco, CA' },
-    { id: 8, date: '4 Feb, 2023', company: 'Google', title: 'Junior UI/UX Designer', type: 'Full time', level: 'Junior level', location: 'Remote', salary: '$150/hr', locationDetails: 'California, CA' },
-    { id: 9, date: '29 Jan, 2023', company: 'Dribbble', title: 'Senior Motion Designer', type: 'Part time', level: 'Senior level', location: 'On-site', salary: '$260/hr', locationDetails: 'New York, NY' },
-  ];
+  const fetchJobs = async () => {
+    try {
+      const response = await axiosInstance.get('/searchJobs');
+      setJobs(response.data);
+    } catch (error) {
+      console.error('Error fetching jobs:', error);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+  
+    if (type === 'checkbox') {
+      setSearchParams((prevParams) => ({
+        ...prevParams,
+        [name]: checked ? value : '',
+      }));
+    } else {
+      setSearchParams((prevParams) => ({
+        ...prevParams,
+        [name]: value,
+      }));
+    }
+  };  
+
+  const handleSearch = async () => {
+    try {
+      const response = await axiosInstance.get('/searchJobs', {
+        params: searchParams,
+      });
+      setJobs(response.data);
+    } catch (error) {
+      console.error('Error searching jobs:', error);
+    }
+  };
 
   return (
     <div className="user-homepage">
@@ -34,9 +70,25 @@ const JobSearchPage = () => {
         <div className="job-search-page">
           <header className="job-search-header">
             <div className="header-left">
-              <input type="text" placeholder="Search by job title, company, keywords" />
-              <input type="text" placeholder="Work location (Country, City)" />
-              <select>
+              <input
+                type="text"
+                name="title"
+                placeholder="Search by job title, company, keywords"
+                value={searchParams.title}
+                onChange={handleInputChange}
+              />
+              <input
+                type="text"
+                name="location"
+                placeholder="Work location (Country, City)"
+                value={searchParams.location}
+                onChange={handleInputChange}
+              />
+              <select
+                name="industryType"
+                value={searchParams.type}
+                onChange={handleInputChange}
+              >
                 <option value="">Industry</option>
                 <option value="it">Information Technology</option>
                 <option value="healthcare">Healthcare</option>
@@ -56,8 +108,12 @@ const JobSearchPage = () => {
                 <option value="government">Government and Public Administration</option>
                 <option value="nonprofit">Nonprofit and NGOs</option>
               </select>
-              <select id="date-posted-filter">
-                <option value="anytime">Anytime</option>
+              <select
+                name="createdAt"
+                value={searchParams.createdAt}
+                onChange={handleInputChange}
+              >
+                <option value="">Anytime</option>
                 <option value="past-24-hours">Past 24 hours</option>
                 <option value="past-week">Past Week</option>
                 <option value="past-month">Past Month</option>
@@ -66,57 +122,70 @@ const JobSearchPage = () => {
             </div>
             <div className="header-right">
               <span>Salary range</span>
-              <input type="range" min="1200" max="20000" step="100" />
+              <input
+                type="number"
+                name="salary"
+                placeholder="Minimum Salary"
+                value={searchParams.salary}
+                onChange={handleInputChange}
+              />
             </div>
           </header>
           <main>
             <aside className="filters">
               <div>
                 <h3>Employment type</h3>
-                <label><input type="checkbox" /> Full time</label>
-                <label><input type="checkbox" /> Part-time</label>
-                <label><input type="checkbox" /> Contract</label>
-                <label><input type="checkbox" /> Freelance</label>
-                <label><input type="checkbox" /> Internship</label>
+                <label><input type="checkbox" name="type" value="Full-time" onChange={handleInputChange} /> Full time</label>
+                <label><input type="checkbox" name="type" value="Part-time" onChange={handleInputChange} /> Part-time</label>
+                <label><input type="checkbox" name="type" value="Contract" onChange={handleInputChange} /> Contract</label>
+                <label><input type="checkbox" name="type" value="Freelance" onChange={handleInputChange} /> Freelance</label>
+                <label><input type="checkbox" name="type" value="Internship" onChange={handleInputChange} /> Internship</label>
               </div>
               <div>
                 <h3>Remote Options</h3>
-                <label><input type="checkbox" /> Remote</label>
-                <label><input type="checkbox" /> Hybrid</label>
-                <label><input type="checkbox" /> On-site</label>
+                <label><input type="checkbox" name="remoteOption" value="Remote" onChange={handleInputChange} /> Remote</label>
+                <label><input type="checkbox" name="remoteOption" value="Hybrid" onChange={handleInputChange} /> Hybrid</label>
+                <label><input type="checkbox" name="remoteOption" value="On-site" onChange={handleInputChange} /> On-site</label>
               </div>
               <div>
                 <h3>Experience Level</h3>
-                <label><input type="checkbox" /> Entry-level</label>
-                <label><input type="checkbox" /> Mid-level</label>
-                <label><input type="checkbox" /> Senior-level</label>
+                <label><input type="checkbox" name="level" value="Entry-level" onChange={handleInputChange} /> Entry-level</label>
+                <label><input type="checkbox" name="level" value="Mid-level" onChange={handleInputChange} /> Mid-level</label>
+                <label><input type="checkbox" name="level" value="Senior-level" onChange={handleInputChange} /> Senior-level</label>
               </div>
             </aside>
             <section className="recommended-jobs">
-              <h2>Recommended jobs</h2>
+              <div className="recommended-jobs-header">
+                <button className="search-button" onClick={handleSearch}>Search</button>
+                <h2>Recommended jobs</h2>
+              </div>
               <div className="job-cards">
-                {jobs.map((job) => (
-                  <div key={job.id} className="job-card">
-                    <div className="job-card-header">
-                      <span className="job-date">{job.date}</span>
-                      <span className="bookmark-icon"><IoBookmark /></span>
-                    </div>
-                    <div className="job-card-body">
-                      <h3 className="job-title">{job.title}</h3>
-                      <p className="job-company">{job.company}</p>
-                      <div className="tags">
-                        <span className="job-tag">{job.type}</span>
-                        <span className="job-tag">{job.level}</span>
-                        <span className="job-tag">{job.location}</span>
+                {jobs.length > 0 ? (
+                  jobs.map((job) => (
+                    <div key={job.id} className="job-card">
+                      <div className="job-card-header">
+                        <span className="job-date">{new Date(job.created_at).toLocaleDateString()}</span>
+                        <span className="bookmark-icon"><IoBookmark /></span>
                       </div>
-                      <div className="job-card-footer">
-                        <span className="job-salary">{job.salary}</span>
-                        <span className="job-location">{job.locationDetails}</span>
+                      <div className="job-card-body">
+                        <h3 className="job-title">{job.title}</h3>
+                        <p className="job-company">{job.company}</p>
+                        <div className="tags">
+                          <span className="job-tag">{job.type}</span>
+                          <span className="job-tag">{job.level}</span>
+                          
+                        </div>
+                        <div className="job-card-footer">
+                          <span className="job-salary">{job.salary}</span>
+                          <span className="job-location">{job.location}</span>
+                        </div>
                       </div>
+                      <button className="details-button">Details</button>
                     </div>
-                    <button className="details-button">Details</button>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p>No jobs found</p>
+                )}
               </div>
             </section>
           </main>

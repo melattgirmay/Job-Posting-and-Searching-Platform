@@ -45,7 +45,7 @@ db.on('error', (err) => {
   console.error('Database error:', err);
 });
 
-// Endpoint to search a job
+// Endpoint to search for a job
 app.get('/api/searchJobs', async (req, res) => {
   const { title, location, createdAt, salary, type, remoteOption, level } = req.query;
 
