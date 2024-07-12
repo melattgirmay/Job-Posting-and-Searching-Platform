@@ -45,6 +45,51 @@ db.on('error', (err) => {
   console.error('Database error:', err);
 });
 
+// Endpoint to search a job
+app.get('/api/searchJobs', async (req, res) => {
+  const { title, location, createdAt, salary, type, remoteOption, level } = req.query;
+
+  let query = 'SELECT * FROM jobs WHERE 1=1';
+  const values = [];
+
+  if (title) {
+    query += ' AND title LIKE ?';
+    values.push(`%${title}%`);
+  }
+  if (location) {
+    query += ' AND location LIKE ?';
+    values.push(`%${location}%`);
+  }
+  if (createdAt) {
+    query += ' AND DATE(created_at) = ?';
+    values.push(createdAt);
+  }
+  if (salary) {
+    query += ' AND salary >= ?';
+    values.push(salary);
+  }
+  if (type) {
+    query += ' AND type LIKE ?';
+    values.push(`%${type}%`);
+  }
+  if (remoteOption) {
+    query += ' AND remote_option LIKE ?';
+    values.push(`%${remoteOption}%`);
+  }
+  if (level) {
+    query += ' AND level LIKE ?';
+    values.push(`%${level}%`);
+  }
+
+  try {
+    const [results] = await db.promise().query(query, values);
+    res.status(200).json(results);
+  } catch (err) {
+    console.error('Error searching jobs:', err);
+    res.status(500).json({ message: 'Failed to search jobs' });
+  }
+});
+
 // Endpoint to post a job
 app.post('/api/postJob', checkLoggedIn, async (req, res) => {
   const { title, location, type, level, salary, description, responsibilities, requirements, remoteOption } = req.body;

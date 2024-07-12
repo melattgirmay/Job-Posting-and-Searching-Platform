@@ -108,8 +108,6 @@ const JobSearchPage = () => {
                         <span className="job-tag">{job.type}</span>
                         <span className="job-tag">{job.level}</span>
                         <span className="job-tag">{job.location}</span>
-                        <span className="job-tag">Project work</span>
-                        <span className="job-tag">Flexible Schedule</span>
                       </div>
                       <div className="job-card-footer">
                         <span className="job-salary">{job.salary}</span>
