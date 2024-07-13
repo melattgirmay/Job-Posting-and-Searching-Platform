@@ -157,3 +157,98 @@ main {
   background-color: black; /* Darker shade for hover effect */
 }
 
+.preview-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.preview {
+  width: 50%;
+  min-height: fit-content;
+  min-width: fit-content;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.preview-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.preview-card {
+  min-width: fit-content;
+  max-width: fit-content;
+  background-color: #ffffff;
+  font-size: 18px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px 2px #2596bed8;
+  padding: 25px;
+  margin-bottom: 20px;
+  text-decoration: none;
+}
+
+.preview-card h1{
+  font-size: 30px !important;
+}
+
+.preview-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.preview-date {
+  font-size: 18px;
+  color: black;
+}
+
+.preview-salary, .preview-location {
+  color: white;
+}
+
+.preview-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: b;
+}
+
+.preview-tags {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.preview-tag {
+  padding: 5px 10px;
+  border-radius: 5px;
+  background: #2596be !important;
+}
+
+.preview-card-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.preview-salary, .preview-location {
+  font-size: 18px;
+  color: black;
+}

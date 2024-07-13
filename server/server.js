@@ -90,6 +90,30 @@ app.get('/api/searchJobs', async (req, res) => {
   }
 });
 
+// Endpoint to fetch job details by job ID
+app.get('/api/jobs/:jobId', async (req, res) => {
+  const jobId = req.params.jobId;
+
+  // Query to fetch job details by job ID
+  const query = 'SELECT * FROM jobs WHERE id = ?';
+  
+  try {
+    // Execute the query
+    const [jobDetails] = await db.promise().query(query, [jobId]);
+
+    // Check if job details were found
+    if (jobDetails.length === 0) {
+      return res.status(404).json({ message: 'Job not found' });
+    }
+
+    // Send the job details as JSON response
+    res.status(200).json(jobDetails[0]); // Assuming jobDetails is an object representing job details
+  } catch (err) {
+    console.error('Error fetching job details:', err);
+    res.status(500).json({ message: 'Failed to fetch job details' });
+  }
+});
+
 // Endpoint to post a job
 app.post('/api/postJob', checkLoggedIn, async (req, res) => {
   const { title, location, type, level, salary, description, responsibilities, requirements, remoteOption } = req.body;

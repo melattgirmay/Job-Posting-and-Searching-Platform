@@ -1,4 +1,3 @@
-// client/src/axiosConfig.js
 import axios from 'axios';
 
 const getToken = () => {
