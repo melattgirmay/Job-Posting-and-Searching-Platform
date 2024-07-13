@@ -160,32 +160,32 @@ const JobSearchPage = () => {
                 <h2>Recommended jobs</h2>
               </div>
               <div className="job-cards">
-                {jobs.length > 0 ? (
-                  jobs.map((job) => (
-                    <div key={job.id} className="job-card">
-                      <div className="job-card-header">
-                        <span className="job-date">{new Date(job.created_at).toLocaleDateString()}</span>
-                        <span className="bookmark-icon"><IoBookmark /></span>
-                      </div>
-                      <div className="job-card-body">
-                        <h3 className="job-title">{job.title}</h3>
-                        <p className="job-company">{job.company}</p>
-                        <div className="tags">
-                          <span className="job-tag">{job.type}</span>
-                          <span className="job-tag">{job.level}</span>
-                          
-                        </div>
-                        <div className="job-card-footer">
-                          <span className="job-salary">{job.salary}</span>
-                          <span className="job-location">{job.location}</span>
-                        </div>
-                      </div>
-                      <button className="details-button">Details</button>
+              {jobs.length > 0 ? (
+                jobs.map((job) => (
+                  <div key={job.id} className="job-card">
+                    <div className="job-card-header">
+                      <span className="job-date">{new Date(job.created_at).toLocaleDateString()}</span>
+                      <span className="bookmark-icon"><IoBookmark /></span>
                     </div>
-                  ))
-                ) : (
-                  <p>No jobs found</p>
-                )}
+                    <div className="job-card-body">
+                      <h3 className="job-title">{job.title}</h3>
+                      <p className="job-company">{job.company}</p>
+                      <div className="tags">
+                        <span className="job-tag">{job.type}</span>
+                        <span className="job-tag">{job.level}</span>
+                        <span className="job-tag">{job.remote_option}</span> {/* Display remoteOption */}
+                      </div>
+                      <div className="job-card-footer">
+                        <span className="job-salary">{job.salary}</span>
+                        <span className="job-location">{job.location}</span>
+                      </div>
+                    </div>
+                    <button className="details-button">Details</button>
+                  </div>
+                ))
+              ) : (
+                <p>No jobs found</p>
+              )}
               </div>
             </section>
           </main>
