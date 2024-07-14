@@ -14,21 +14,40 @@ const EditProfile = ({ email }) => {
     state: '',
     country: '',
     resumeLink: '',
-    previousJobs: '',
-    jobTitles: '',
-    companies: '',
-    employmentDates: '',
-    education: '',
-    degrees: '',
-    institutions: '',
-    graduationDates: '',
+    education: [
+      {
+        collegeName: '',
+        degreeType: '',
+        major: '',
+        startDate: '',
+        endDate: '',
+        honors: '',
+        city: '',
+        country: '',
+      }
+    ],
+    jobExperience: [
+      {
+        jobTitle: '',
+        employer: '',
+        jobCity: '',
+        jobCountry: '',
+        jobStartDate: '',
+        jobEndDate: '',
+        jobDescription: '',
+        currentJob: false,
+      }
+    ],
     skills: '',
     certifications: '',
     languages: '',
     portfolioLink: '',
+    employmentStatus: '',
+    jobSearchStatus: '',
+    companyName: '',
   });
 
-  const [message] = useState('');
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -49,19 +68,72 @@ const EditProfile = ({ email }) => {
     }
   }, [email]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (e, index = null, section = null) => {
+    const { name, value, type, checked } = e.target;
+    if (section) {
+      const newSection = [...userData[section]];
+      newSection[index][name] = type === 'checkbox' ? checked : value;
+      setUserData({
+        ...userData,
+        [section]: newSection,
+      });
+    } else {
+      setUserData({
+        ...userData,
+        [name]: value,
+      });
+    }
+  };
+
+  const handleAddEducation = () => {
     setUserData({
       ...userData,
-      [name]: value,
+      education: [
+        ...userData.education,
+        {
+          collegeName: '',
+          degreeType: '',
+          major: '',
+          startDate: '',
+          endDate: '',
+          honors: '',
+          city: '',
+          country: '',
+        }
+      ]
     });
+  };
+
+  const handleAddJobExperience = () => {
+    setUserData({
+      ...userData,
+      jobExperience: [
+        ...userData.jobExperience,
+        {
+          jobTitle: '',
+          employer: '',
+          jobCity: '',
+          jobCountry: '',
+          jobStartDate: '',
+          jobEndDate: '',
+          jobDescription: '',
+          currentJob: false,
+        }
+      ]
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission logic here
+    setMessage('Profile updated successfully!');
   };
 
   return (
     <div className='form-wrapper'>
       <div className="form-container">
         <button className="back-link" onClick={() => navigate(-1)}>← Back</button>
-        <form>
+        <form onSubmit={handleSubmit}>
           <h2>Edit Profile</h2>
 
           <div className="form-section">
@@ -125,80 +197,153 @@ const EditProfile = ({ email }) => {
           </div>
 
           <div className="form-section">
-            <h3>Professional Information</h3>
-            <div className="form-row">
-              <input
-                type="text"
-                name="resumeLink"
-                placeholder="Resume/CV Link"
-                value={userData.resumeLink}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-row">
-              <input
-                type="text"
-                name="previousJobs"
-                placeholder="Previous Jobs"
-                value={userData.previousJobs}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="jobTitles"
-                placeholder="Job Titles"
-                value={userData.jobTitles}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="companies"
-                placeholder="Companies"
-                value={userData.companies}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-row">
-              <input
-                type="text"
-                name="employmentDates"
-                placeholder="Employment Dates"
-                value={userData.employmentDates}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-row">
-              <input
-                type="text"
-                name="education"
-                placeholder="Education"
-                value={userData.education}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="degrees"
-                placeholder="Degrees"
-                value={userData.degrees}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="institutions"
-                placeholder="Institutions"
-                value={userData.institutions}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-row">
-              <input
-                type="text"
-                name="graduationDates"
-                placeholder="Graduation Dates"
-                value={userData.graduationDates}
-                onChange={handleChange}
-              />
-            </div>
+            <h3>Education</h3>
+            {userData.education.map((edu, index) => (
+              <div key={index}>
+                <div className="form-row">
+                  <input
+                    type="text"
+                    name="collegeName"
+                    placeholder="College Name"
+                    value={edu.collegeName}
+                    onChange={(e) => handleChange(e, index, 'education')}
+                  />
+                  <input
+                    type="text"
+                    name="degreeType"
+                    placeholder="Degree Type"
+                    value={edu.degreeType}
+                    onChange={(e) => handleChange(e, index, 'education')}
+                  />
+                </div>
+                <div className="form-row">
+                  <input
+                    type="text"
+                    name="major"
+                    placeholder="Major"
+                    value={edu.major}
+                    onChange={(e) => handleChange(e, index, 'education')}
+                  />
+                  <input
+                    type="text"
+                    name="startDate"
+                    placeholder="Start Date"
+                    value={edu.startDate}
+                    onChange={(e) => handleChange(e, index, 'education')}
+                  />
+                  <input
+                    type="text"
+                    name="endDate"
+                    placeholder="End Date"
+                    value={edu.endDate}
+                    onChange={(e) => handleChange(e, index, 'education')}
+                  />
+                </div>
+                <div className="form-row">
+                  <input
+                    type="text"
+                    name="honors"
+                    placeholder="Honors/Awards"
+                    value={edu.honors}
+                    onChange={(e) => handleChange(e, index, 'education')}
+                  />
+                  <input
+                    type="text"
+                    name="city"
+                    placeholder="City"
+                    value={edu.city}
+                    onChange={(e) => handleChange(e, index, 'education')}
+                  />
+                  <input
+                    type="text"
+                    name="country"
+                    placeholder="Country"
+                    value={edu.country}
+                    onChange={(e) => handleChange(e, index, 'education')}
+                  />
+                </div>
+              </div>
+            ))}
+            <button type="button" onClick={handleAddEducation}>+ Add Education</button>
+          </div>
+
+          <div className="form-section">
+            <h3>Job Experience</h3>
+            {userData.jobExperience.map((job, index) => (
+              <div key={index}>
+                <div className="form-row">
+                  <input
+                    type="text"
+                    name="jobTitle"
+                    placeholder="Job Title"
+                    value={job.jobTitle}
+                    onChange={(e) => handleChange(e, index, 'jobExperience')}
+                  />
+                  <input
+                    type="text"
+                    name="employer"
+                    placeholder="Employer/Company"
+                    value={job.employer}
+                    onChange={(e) => handleChange(e, index, 'jobExperience')}
+                  />
+                </div>
+                <div className="form-row">
+                  <input
+                    type="text"
+                    name="jobCity"
+                    placeholder="City"
+                    value={job.jobCity}
+                    onChange={(e) => handleChange(e, index, 'jobExperience')}
+                  />
+                  <input
+                    type="text"
+                    name="jobCountry"
+                    placeholder="Country"
+                    value={job.jobCountry}
+                    onChange={(e) => handleChange(e, index, 'jobExperience')}
+                  />
+                </div>
+                <div className="form-row">
+                  <input
+                    type="text"
+                    name="jobStartDate"
+                    placeholder="Start Date"
+                    value={job.jobStartDate}
+                    onChange={(e) => handleChange(e, index, 'jobExperience')}
+                  />
+                  <input
+                    type="text"
+                    name="jobEndDate"
+                    placeholder="End Date"
+                    value={job.jobEndDate}
+                    onChange={(e) => handleChange(e, index, 'jobExperience')}
+                    disabled={job.currentJob}
+                  />
+                  <label>
+                    <input
+                      type="checkbox"
+                      name="currentJob"
+                      checked={job.currentJob}
+                      onChange={(e) => handleChange(e, index, 'jobExperience')}
+                    />
+                    Current Job
+                  </label>
+                </div>
+                <div className="form-row">
+                  <textarea
+                    name="jobDescription"
+                    placeholder="Job Description"
+                    value={job.jobDescription}
+                    onChange={(e) => handleChange(e, index, 'jobExperience')}
+                  />
+                </div>
+              </div>
+            ))}
+            <button type="button" onClick={handleAddJobExperience}>+ Add Job Experience</button>
+          </div>
+
+          <div className="form-section">
+            <h3>Additional Information</h3>
             <div className="form-row">
               <input
                 type="text"
@@ -231,6 +376,91 @@ const EditProfile = ({ email }) => {
                 onChange={handleChange}
               />
             </div>
+          </div>
+
+          <div className="form-section">
+            <h3>Employment Status</h3>
+            <div className="form-row">
+              <label>
+                <input
+                  type="radio"
+                  name="employmentStatus"
+                  value="Employed"
+                  checked={userData.employmentStatus === 'Employed'}
+                  onChange={handleChange}
+                />
+                Employed
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="employmentStatus"
+                  value="Unemployed"
+                  checked={userData.employmentStatus === 'Unemployed'}
+                  onChange={handleChange}
+                />
+                Unemployed
+              </label>
+            </div>
+            {userData.employmentStatus === 'Employed' && (
+              <div className="form-row">
+                <label>
+                  <input
+                    type="radio"
+                    name="jobSearchStatus"
+                    value="Looking for a job"
+                    checked={userData.jobSearchStatus === 'Looking for a job'}
+                    onChange={handleChange}
+                  />
+                  Looking for a job
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="jobSearchStatus"
+                    value="Not looking for a job"
+                    checked={userData.jobSearchStatus === 'Not looking for a job'}
+                    onChange={handleChange}
+                  />
+                  Not looking for a job
+                </label>
+              </div>
+            )}
+            {userData.employmentStatus === 'Employed' && (
+              <div className="form-row">
+                <label>
+                  <input
+                    type="radio"
+                    name="workType"
+                    value="Own Business"
+                    checked={userData.workType === 'Own Business'}
+                    onChange={handleChange}
+                  />
+                  Own Business
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="workType"
+                    value="Company"
+                    checked={userData.workType === 'Company'}
+                    onChange={handleChange}
+                  />
+                  Company
+                </label>
+              </div>
+            )}
+            {userData.workType === 'Company' && (
+              <div className="form-row">
+                <input
+                  type="text"
+                  name="companyName"
+                  placeholder="Company Name"
+                  value={userData.companyName}
+                  onChange={handleChange}
+                />
+              </div>
+            )}
           </div>
 
           <button type="submit">Update Profile</button>
