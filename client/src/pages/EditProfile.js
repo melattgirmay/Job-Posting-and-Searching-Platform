@@ -4,7 +4,6 @@ import '../styles/EditProfile.css';
 
 const EditProfile = ({ email }) => {
   const navigate = useNavigate();
-
   const [userData, setUserData] = useState({
     firstName: '',
     lastName: '',
@@ -14,33 +13,34 @@ const EditProfile = ({ email }) => {
     state: '',
     country: '',
     resumeLink: '',
-    education: [
-      {
-        collegeName: '',
-        degreeType: '',
-        major: '',
-        startDate: '',
-        endDate: '',
-        honors: '',
-        city: '',
-        country: '',
-      }
-    ],
-    jobExperience: [
-      {
-        jobTitle: '',
-        employer: '',
-        jobCity: '',
-        jobCountry: '',
-        jobStartDate: '',
-        jobEndDate: '',
-        jobDescription: '',
-        currentJob: false,
-      }
-    ],
-    skills: '',
+    education: [{
+      collegeName: '',
+      degreeType: '',
+      major: '',
+      startDate: '',
+      endDate: '',
+      honors: '',
+      city: '',
+      country: '',
+    }],
+    jobExperience: [{
+      jobTitle: '',
+      employer: '',
+      jobCity: '',
+      jobCountry: '',
+      jobStartDate: '',
+      jobEndDate: '',
+      jobDescription: '',
+      currentJob: false,
+    }],
+    technicalSkills: [],
+    othertechskill: '',
+    softSkills: [],
+    othersoftskill: '',
+    languages: [],
+    otherlanguage: '',
     certifications: '',
-    languages: '',
+    honorsAwards: '',
     portfolioLink: '',
     employmentStatus: '',
     jobSearchStatus: '',
@@ -48,6 +48,11 @@ const EditProfile = ({ email }) => {
   });
 
   const [message, setMessage] = useState('');
+  const [profileImage, setProfileImage] = useState('path-to-default-user-image');
+
+  const availableTechnicalSkills = ["JavaScript", "React", "Node.js", "CSS", "HTML"];
+  const availableSoftSkills = ['Communication', 'Teamwork', 'Problem Solving', 'Leadership'];
+  const availableLanguages = ['English', 'Spanish', 'French', 'German'];
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -57,6 +62,33 @@ const EditProfile = ({ email }) => {
           throw new Error('Failed to fetch user data');
         }
         const data = await response.json();
+
+        // Ensure `education` and `jobExperience` are arrays
+        if (!Array.isArray(data.education)) {
+          data.education = [{
+            collegeName: '',
+            degreeType: '',
+            major: '',
+            startDate: '',
+            endDate: '',
+            honors: '',
+            city: '',
+            country: '',
+          }];
+        }
+        if (!Array.isArray(data.jobExperience)) {
+          data.jobExperience = [{
+            jobTitle: '',
+            employer: '',
+            jobCity: '',
+            jobCountry: '',
+            jobStartDate: '',
+            jobEndDate: '',
+            jobDescription: '',
+            currentJob: false,
+          }];
+        }
+
         setUserData(data);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -73,23 +105,45 @@ const EditProfile = ({ email }) => {
     if (section) {
       const newSection = [...userData[section]];
       newSection[index][name] = type === 'checkbox' ? checked : value;
-      setUserData({
-        ...userData,
-        [section]: newSection,
-      });
+      setUserData({ ...userData, [section]: newSection });
+    } else if (name === 'technicalSkills' || name === 'softSkills' || name === 'languages') {
+      setUserData(prevState => ({
+        ...prevState,
+        [name]: Array.from(e.target.selectedOptions, option => option.value),
+      }));
     } else {
-      setUserData({
-        ...userData,
-        [name]: value,
-      });
+      setUserData({ ...userData, [name]: value });
     }
   };
 
+  const handleSkillChange = (selectedSkills, skillType) => {
+    setUserData(prevState => ({
+      ...prevState,
+      [skillType]: selectedSkills,
+    }));
+  };
+
+  const handleOtherSkillChange = (e, skillType) => {
+    setUserData(prevState => ({ ...prevState, [skillType]: e.target.value }));
+  };
+
+  const addOtherSkill = (skillType, otherSkillKey) => {
+    const skillValue = userData[otherSkillKey];
+    if (skillValue && !userData[skillType].includes(skillValue)) {
+      handleSkillChange([...userData[skillType], skillValue], skillType);
+      setUserData(prevState => ({ ...prevState, [otherSkillKey]: '' }));
+    }
+  };
+
+  const removeSkill = (skillToRemove, skillType) => {
+    handleSkillChange(userData[skillType].filter(skill => skill !== skillToRemove), skillType);
+  };
+
   const handleAddEducation = () => {
-    setUserData({
-      ...userData,
+    setUserData(prevState => ({
+      ...prevState,
       education: [
-        ...userData.education,
+        ...prevState.education,
         {
           collegeName: '',
           degreeType: '',
@@ -99,16 +153,16 @@ const EditProfile = ({ email }) => {
           honors: '',
           city: '',
           country: '',
-        }
-      ]
-    });
+        },
+      ],
+    }));
   };
 
   const handleAddJobExperience = () => {
-    setUserData({
-      ...userData,
+    setUserData(prevState => ({
+      ...prevState,
       jobExperience: [
-        ...userData.jobExperience,
+        ...prevState.jobExperience,
         {
           jobTitle: '',
           employer: '',
@@ -118,15 +172,25 @@ const EditProfile = ({ email }) => {
           jobEndDate: '',
           jobDescription: '',
           currentJob: false,
-        }
-      ]
-    });
+        },
+      ],
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
     setMessage('Profile updated successfully!');
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setProfileImage(reader.result);
+    };
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -136,6 +200,7 @@ const EditProfile = ({ email }) => {
         <form onSubmit={handleSubmit}>
           <h2>Edit Profile</h2>
 
+          {/* Personal Information */}
           <div className="form-section">
             <h3>Personal Information</h3>
             <div className="form-row">
@@ -161,7 +226,7 @@ const EditProfile = ({ email }) => {
                 placeholder="Email"
                 value={userData.email}
                 onChange={handleChange}
-                disabled // Prevent editing email
+                disabled
               />
               <input
                 type="tel"
@@ -196,6 +261,7 @@ const EditProfile = ({ email }) => {
             </div>
           </div>
 
+          {/* Education */}
           <div className="form-section">
             <h3>Education</h3>
             {userData.education.map((edu, index) => (
@@ -239,41 +305,18 @@ const EditProfile = ({ email }) => {
                     onChange={(e) => handleChange(e, index, 'education')}
                   />
                 </div>
-                <div className="form-row">
-                  <input
-                    type="text"
-                    name="honors"
-                    placeholder="Honors/Awards"
-                    value={edu.honors}
-                    onChange={(e) => handleChange(e, index, 'education')}
-                  />
-                  <input
-                    type="text"
-                    name="city"
-                    placeholder="City"
-                    value={edu.city}
-                    onChange={(e) => handleChange(e, index, 'education')}
-                  />
-                  <input
-                    type="text"
-                    name="country"
-                    placeholder="Country"
-                    value={edu.country}
-                    onChange={(e) => handleChange(e, index, 'education')}
-                  />
-                </div>
               </div>
             ))}
-            <button type="button" onClick={handleAddEducation}>+ Add Education</button>
+            <button type="button" onClick={handleAddEducation}>Add Education</button>
           </div>
 
+          {/* Job Experience */}
           <div className="form-section">
             <h3>Job Experience</h3>
             {userData.jobExperience.map((job, index) => (
               <div key={index}>
                 <div className="form-row">
-                  <input
-                    type="text"
+                  <input                    type="text"
                     name="jobTitle"
                     placeholder="Job Title"
                     value={job.jobTitle}
@@ -282,7 +325,7 @@ const EditProfile = ({ email }) => {
                   <input
                     type="text"
                     name="employer"
-                    placeholder="Employer/Company"
+                    placeholder="Employer"
                     value={job.employer}
                     onChange={(e) => handleChange(e, index, 'jobExperience')}
                   />
@@ -302,8 +345,6 @@ const EditProfile = ({ email }) => {
                     value={job.jobCountry}
                     onChange={(e) => handleChange(e, index, 'jobExperience')}
                   />
-                </div>
-                <div className="form-row">
                   <input
                     type="text"
                     name="jobStartDate"
@@ -317,161 +358,123 @@ const EditProfile = ({ email }) => {
                     placeholder="End Date"
                     value={job.jobEndDate}
                     onChange={(e) => handleChange(e, index, 'jobExperience')}
-                    disabled={job.currentJob}
-                  />
-                  <label>
-                    <input
-                      type="checkbox"
-                      name="currentJob"
-                      checked={job.currentJob}
-                      onChange={(e) => handleChange(e, index, 'jobExperience')}
-                    />
-                    Current Job
-                  </label>
-                </div>
-                <div className="form-row">
-                  <textarea
-                    name="jobDescription"
-                    placeholder="Job Description"
-                    value={job.jobDescription}
-                    onChange={(e) => handleChange(e, index, 'jobExperience')}
                   />
                 </div>
               </div>
             ))}
-            <button type="button" onClick={handleAddJobExperience}>+ Add Job Experience</button>
+            <button type="button" onClick={handleAddJobExperience}>Add Job Experience</button>
           </div>
 
+          {/* Skills */}
           <div className="form-section">
-            <h3>Additional Information</h3>
+            <h3>Skills</h3>
             <div className="form-row">
+              <select
+                multiple
+                value={userData.technicalSkills}
+                onChange={(e) => handleChange(e)}
+                name="technicalSkills"
+              >
+                {availableTechnicalSkills.map((skill, index) => (
+                  <option key={index} value={skill}>{skill}</option>
+                ))}
+              </select>
               <input
                 type="text"
-                name="skills"
-                placeholder="Skills"
-                value={userData.skills}
-                onChange={handleChange}
+                placeholder="Other Technical Skill"
+                value={userData.othertechskill}
+                onChange={(e) => handleOtherSkillChange(e, 'othertechskill')}
               />
+              <button type="button" onClick={() => addOtherSkill('technicalSkills', 'othertechskill')}>Add</button>
+            </div>
+            <div>
+              {userData.technicalSkills.map((skill, index) => (
+                <span key={index}>
+                  {skill}
+                  <button type="button" onClick={() => removeSkill(skill, 'technicalSkills')}>Remove</button>
+                </span>
+              ))}
+            </div>
+            <div className="form-row">
+              <select
+                multiple
+                value={userData.softSkills}
+                onChange={(e) => handleChange(e)}
+                name="softSkills"
+              >
+                {availableSoftSkills.map((skill, index) => (
+                  <option key={index} value={skill}>{skill}</option>
+                ))}
+              </select>
               <input
                 type="text"
-                name="certifications"
-                placeholder="Certifications"
-                value={userData.certifications}
-                onChange={handleChange}
+                placeholder="Other Soft Skill"
+                value={userData.othersoftskill}
+                onChange={(e) => handleOtherSkillChange(e, 'othersoftskill')}
               />
-              <input
-                type="text"
-                name="languages"
-                placeholder="Languages"
+              <button type="button" onClick={() => addOtherSkill('softSkills', 'othersoftskill')}>Add</button>
+            </div>
+            <div>
+              {userData.softSkills.map((skill, index) => (
+                <span key={index}>
+                  {skill}
+                  <button type="button" onClick={() => removeSkill(skill, 'softSkills')}>Remove</button>
+                </span>
+              ))}
+            </div>
+            <div className="form-row">
+              <select
+                multiple
                 value={userData.languages}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-row">
+                onChange={(e) => handleChange(e)}
+                name="languages"
+              >
+                {availableLanguages.map((language, index) => (
+                  <option key={index} value={language}>{language}</option>
+                ))}
+              </select>
               <input
                 type="text"
-                name="portfolioLink"
-                placeholder="Portfolio Link"
-                value={userData.portfolioLink}
-                onChange={handleChange}
+                placeholder="Other Language"
+                value={userData.otherlanguage}
+                onChange={(e) => handleOtherSkillChange(e, 'otherlanguage')}
               />
+              <button type="button" onClick={() => addOtherSkill('languages', 'otherlanguage')}>Add</button>
+            </div>
+            <div>
+              {userData.languages.map((language, index) => (
+                <span key={index}>
+                  {language}
+                  <button type="button" onClick={() => removeSkill(language, 'languages')}>Remove</button>
+                </span>
+              ))}
             </div>
           </div>
 
+          {/* Submit Button */}
           <div className="form-section">
-            <h3>Employment Status</h3>
-            <div className="form-row">
-              <label>
-                <input
-                  type="radio"
-                  name="employmentStatus"
-                  value="Employed"
-                  checked={userData.employmentStatus === 'Employed'}
-                  onChange={handleChange}
-                />
-                Employed
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="employmentStatus"
-                  value="Unemployed"
-                  checked={userData.employmentStatus === 'Unemployed'}
-                  onChange={handleChange}
-                />
-                Unemployed
-              </label>
-            </div>
-            {userData.employmentStatus === 'Employed' && (
-              <div className="form-row">
-                <label>
-                  <input
-                    type="radio"
-                    name="jobSearchStatus"
-                    value="Looking for a job"
-                    checked={userData.jobSearchStatus === 'Looking for a job'}
-                    onChange={handleChange}
-                  />
-                  Looking for a job
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="jobSearchStatus"
-                    value="Not looking for a job"
-                    checked={userData.jobSearchStatus === 'Not looking for a job'}
-                    onChange={handleChange}
-                  />
-                  Not looking for a job
-                </label>
-              </div>
-            )}
-            {userData.employmentStatus === 'Employed' && (
-              <div className="form-row">
-                <label>
-                  <input
-                    type="radio"
-                    name="workType"
-                    value="Own Business"
-                    checked={userData.workType === 'Own Business'}
-                    onChange={handleChange}
-                  />
-                  Own Business
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="workType"
-                    value="Company"
-                    checked={userData.workType === 'Company'}
-                    onChange={handleChange}
-                  />
-                  Company
-                </label>
-              </div>
-            )}
-            {userData.workType === 'Company' && (
-              <div className="form-row">
-                <input
-                  type="text"
-                  name="companyName"
-                  placeholder="Company Name"
-                  value={userData.companyName}
-                  onChange={handleChange}
-                />
-              </div>
-            )}
+            <button type="submit">Save Changes</button>
+            {message && <p>{message}</p>}
           </div>
-
-          <button type="submit">Update Profile</button>
         </form>
-        {message && <p>{message}</p>}
       </div>
       <div className='profile-wrapper'>
-        <img src="path-to-user-image" alt="User" className="profile-image" />
+        <img src={profileImage} alt="User" className="profile-image" />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          style={{ display: 'none' }}
+          id="profileImageInput"
+        />
+        <button type="button" onClick={() => document.getElementById('profileImageInput').click()}>
+          Change Profile
+        </button>
       </div>
     </div>
   );
 };
 
 export default EditProfile;
+
+
