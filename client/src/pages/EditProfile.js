@@ -38,9 +38,11 @@ const EditProfile = ({ email }) => {
         currentJob: false,
       }
     ],
-    skills: '',
+    technicalSkills: [],
+    softSkills: [],
+    languages: [],
     certifications: '',
-    languages: '',
+    honorsAwards: '',
     portfolioLink: '',
     employmentStatus: '',
     jobSearchStatus: '',
@@ -48,6 +50,9 @@ const EditProfile = ({ email }) => {
   });
 
   const [message, setMessage] = useState('');
+  const availableTechnicalSkills = ['JavaScript', 'Python', 'React', 'Node.js', 'CSS'];
+  const availableSoftSkills = ['Communication', 'Teamwork', 'Problem Solving', 'Leadership'];
+  const availableLanguages = ['English', 'Spanish', 'French', 'German'];
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -83,6 +88,16 @@ const EditProfile = ({ email }) => {
         [name]: value,
       });
     }
+  };
+
+  const handleSkillChange = (skill, type) => {
+    const updatedSkills = userData[type].includes(skill)
+      ? userData[type].filter(s => s !== skill)
+      : [...userData[type], skill];
+    setUserData({
+      ...userData,
+      [type]: updatedSkills,
+    });
   };
 
   const handleAddEducation = () => {
@@ -317,17 +332,7 @@ const EditProfile = ({ email }) => {
                     placeholder="End Date"
                     value={job.jobEndDate}
                     onChange={(e) => handleChange(e, index, 'jobExperience')}
-                    disabled={job.currentJob}
                   />
-                  <label>
-                    <input
-                      type="checkbox"
-                      name="currentJob"
-                      checked={job.currentJob}
-                      onChange={(e) => handleChange(e, index, 'jobExperience')}
-                    />
-                    Current Job
-                  </label>
                 </div>
                 <div className="form-row">
                   <textarea
@@ -337,135 +342,139 @@ const EditProfile = ({ email }) => {
                     onChange={(e) => handleChange(e, index, 'jobExperience')}
                   />
                 </div>
+                <div className="form-row">
+                  <label>
+                    Current Job:
+                    <input
+                      type="checkbox"
+                      name="currentJob"
+                      checked={job.currentJob}
+                      onChange={(e) => handleChange(e, index, 'jobExperience')}
+                    />
+                  </label>
+                </div>
               </div>
             ))}
             <button type="button" onClick={handleAddJobExperience}>+ Add Job Experience</button>
           </div>
 
           <div className="form-section">
-            <h3>Additional Information</h3>
-            <div className="form-row">
-              <input
-                type="text"
-                name="skills"
-                placeholder="Skills"
-                value={userData.skills}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="certifications"
-                placeholder="Certifications"
-                value={userData.certifications}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="languages"
-                placeholder="Languages"
-                value={userData.languages}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-row">
-              <input
-                type="text"
-                name="portfolioLink"
-                placeholder="Portfolio Link"
-                value={userData.portfolioLink}
-                onChange={handleChange}
-              />
+            <h3>Technical Skills</h3>
+            <div className="skills-container">
+              {availableTechnicalSkills.map(skill => (
+                <label key={skill}>
+                  <input
+                    type="checkbox"
+                    checked={userData.technicalSkills.includes(skill)}
+                    onChange={() => handleSkillChange(skill, 'technicalSkills')}
+                  />
+                  {skill}
+                </label>
+              ))}
             </div>
           </div>
 
           <div className="form-section">
-            <h3>Employment Status</h3>
-            <div className="form-row">
-              <label>
-                <input
-                  type="radio"
-                  name="employmentStatus"
-                  value="Employed"
-                  checked={userData.employmentStatus === 'Employed'}
-                  onChange={handleChange}
-                />
-                Employed
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="employmentStatus"
-                  value="Unemployed"
-                  checked={userData.employmentStatus === 'Unemployed'}
-                  onChange={handleChange}
-                />
-                Unemployed
-              </label>
+            <h3>Soft Skills</h3>
+            <div className="skills-container">
+              {availableSoftSkills.map(skill => (
+                <label key={skill}>
+                  <input
+                    type="checkbox"
+                    checked={userData.softSkills.includes(skill)}
+                    onChange={() => handleSkillChange(skill, 'softSkills')}
+                  />
+                  {skill}
+                </label>
+              ))}
             </div>
-            {userData.employmentStatus === 'Employed' && (
-              <div className="form-row">
-                <label>
-                  <input
-                    type="radio"
-                    name="jobSearchStatus"
-                    value="Looking for a job"
-                    checked={userData.jobSearchStatus === 'Looking for a job'}
-                    onChange={handleChange}
-                  />
-                  Looking for a job
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="jobSearchStatus"
-                    value="Not looking for a job"
-                    checked={userData.jobSearchStatus === 'Not looking for a job'}
-                    onChange={handleChange}
-                  />
-                  Not looking for a job
-                </label>
-              </div>
-            )}
-            {userData.employmentStatus === 'Employed' && (
-              <div className="form-row">
-                <label>
-                  <input
-                    type="radio"
-                    name="workType"
-                    value="Own Business"
-                    checked={userData.workType === 'Own Business'}
-                    onChange={handleChange}
-                  />
-                  Own Business
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="workType"
-                    value="Company"
-                    checked={userData.workType === 'Company'}
-                    onChange={handleChange}
-                  />
-                  Company
-                </label>
-              </div>
-            )}
-            {userData.workType === 'Company' && (
-              <div className="form-row">
-                <input
-                  type="text"
-                  name="companyName"
-                  placeholder="Company Name"
-                  value={userData.companyName}
-                  onChange={handleChange}
-                />
-              </div>
-            )}
           </div>
 
-          <button type="submit">Update Profile</button>
+          <div className="form-section">
+            <h3>Languages</h3>
+            <div className="skills-container">
+              {availableLanguages.map(language => (
+                <label key={language}>
+                  <input
+                    type="checkbox"
+                    checked={userData.languages.includes(language)}
+                    onChange={() => handleSkillChange(language, 'languages')}
+                  />
+                  {language}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="form-section">
+            <h3>Professional Certifications</h3>
+            <input
+              type="text"
+              name="certifications"
+              placeholder="Professional Certifications"
+              value={userData.certifications}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-section">
+            <h3>Honors and Awards</h3>
+            <input
+              type="text"
+              name="honorsAwards"
+              placeholder="Honors and Awards"
+              value={userData.honorsAwards}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-section">
+            <h3>Portfolio</h3>
+            <input
+              type="url"
+              name="portfolioLink"
+              placeholder="Portfolio Link"
+              value={userData.portfolioLink}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-section">
+            <h3>Employment Status</h3>
+            <input
+              type="text"
+              name="employmentStatus"
+              placeholder="Employment Status"
+              value={userData.employmentStatus}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-section">
+            <h3>Job Search Status</h3>
+            <input
+              type="text"
+              name="jobSearchStatus"
+              placeholder="Job Search Status"
+              value={userData.jobSearchStatus}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-section">
+            <h3>Company Name</h3>
+            <input
+              type="text"
+              name="companyName"
+              placeholder="Company Name"
+              value={userData.companyName}
+              onChange={handleChange}
+            />
+          </div>
+
+          <button type="submit" className="save-button">Save</button>
+          {message && <p className="success-message">{message}</p>}
         </form>
-        {message && <p>{message}</p>}
       </div>
       <div className='profile-wrapper'>
         <img src="path-to-user-image" alt="User" className="profile-image" />
