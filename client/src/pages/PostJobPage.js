@@ -69,7 +69,7 @@ const PostJob = () => {
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      const user = JSON.parse(storedUser);
+      
       // Use 'user' if needed
     }
   }, []);
