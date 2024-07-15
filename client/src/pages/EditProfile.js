@@ -13,12 +13,12 @@ const EditProfile = () => {
     email: '',
     phoneNumber: '',
     gender: '',
-    // New fields for additional profile information
+    // Initialize arrays for additional profile information
+    technicalSkills: [],
+    softSkills: [],
+    languages: [],
     resumeCV: '',
-    portfolio: '',
-    technicalSkills: '',
-    softSkills: '',
-    languages: []
+    portfolio: ''
   });
 
   const [selectedTechnicalSkills, setSelectedTechnicalSkills] = useState([]);
@@ -33,7 +33,7 @@ const EditProfile = () => {
     // Fetch user data from backend API
     axiosInstance.get('/api/user')
       .then(response => {
-        const { firstName, middleName, lastName, email, phoneNumber, gender, technicalSkills, softSkills, languages } = response.data;
+        const { firstName, middleName, lastName, email, phoneNumber, gender, technicalSkills, softSkills, languages, resumeCV, portfolio } = response.data;
         setUserData({
           firstName,
           middleName,
@@ -43,10 +43,12 @@ const EditProfile = () => {
           gender,
           technicalSkills,
           softSkills,
-          languages
+          languages,
+          resumeCV,
+          portfolio
         });
-        setSelectedTechnicalSkills(technicalSkills.split(',').map(skill => skill.trim()));
-        setSelectedSoftSkills(softSkills.split(',').map(skill => skill.trim()));
+        setSelectedTechnicalSkills(technicalSkills); // Directly set arrays
+        setSelectedSoftSkills(softSkills);
         setSelectedLanguages(languages);
       })
       .catch(error => {
@@ -62,27 +64,30 @@ const EditProfile = () => {
     }));
   };
 
-  const handleLanguagesChange = e => {
-    const { value } = e.target;
+  const handleFileChange = e => {
+    const file = e.target.files[0];
     setUserData(prevState => ({
       ...prevState,
-      languages: value.split(',')  // Assuming languages are comma-separated
+      resumeCV: file
     }));
   };
 
   const handleTechnicalSkillSelect = e => {
     const { value } = e.target;
     setSelectedTechnicalSkills(prevSkills => [...prevSkills, value]);
+    setCustomTechnicalSkill(''); // Clear the custom input after selection
   };
 
   const handleSoftSkillSelect = e => {
     const { value } = e.target;
     setSelectedSoftSkills(prevSkills => [...prevSkills, value]);
+    setCustomSoftSkill(''); // Clear the custom input after selection
   };
 
   const handleLanguageSelect = e => {
     const { value } = e.target;
     setSelectedLanguages(prevLanguages => [...prevLanguages, value]);
+    setCustomLanguage(''); // Clear the custom input after selection
   };
 
   const handleCustomTechnicalSkillChange = e => {
@@ -114,8 +119,8 @@ const EditProfile = () => {
     // Submit updated user data to backend
     axiosInstance.put('/api/user/update', {
       ...userData,
-      technicalSkills: selectedTechnicalSkills.join(','),
-      softSkills: selectedSoftSkills.join(','),
+      technicalSkills: selectedTechnicalSkills,
+      softSkills: selectedSoftSkills,
       languages: selectedLanguages
     })
       .then(response => {
@@ -215,6 +220,12 @@ const EditProfile = () => {
               </li>
             ))}
           </ul>
+        </label>
+        <label>Resume/CV:
+          <input type="file" name="resumeCV" onChange={handleFileChange} />
+        </label>
+        <label>Link to portfolio:
+          <input type="url" name="portfolio" value={userData.portfolio} onChange={handleChange} />
         </label>
         <button type="submit">Update Profile</button>
       </form>
