@@ -1,11 +1,13 @@
 .form-wrapper {
+  padding: 50px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   height: 100vh; /* Adjust height as needed */
   padding-bottom: 30px;
+  background: white;
 }
 
-.form-container {
+form {
   width: 65%;
   margin: 10px;
   overflow-y: auto;
