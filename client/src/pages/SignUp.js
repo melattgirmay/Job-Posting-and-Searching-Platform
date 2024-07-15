@@ -11,8 +11,6 @@ const SignUp = () => {
     lastName: '',
     email: '',
     phoneNumber: '',
-    country: '',
-    city: '',
     password: '',
     confirmPassword: '',
     gender: '',
@@ -53,10 +51,7 @@ const SignUp = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...formData,
-          location: `${formData.country}, ${formData.city}`, // Combine country and city into location
-        }),
+        body: JSON.stringify(formData),
       });
 
       const result = await response.json();
@@ -157,32 +152,6 @@ const SignUp = () => {
                   onChange={handleChange}
                   required
                   placeholder="Phone number"
-                />
-              </div>
-            </div>
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="country">Country</label>
-                <input
-                  type="text"
-                  id="country"
-                  name="country"
-                  value={formData.country}
-                  onChange={handleChange}
-                  required
-                  placeholder="Country"
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="city">City</label>
-                <input
-                  type="text"
-                  id="city"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  required
-                  placeholder="City"
                 />
               </div>
             </div>
