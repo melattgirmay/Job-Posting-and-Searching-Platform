@@ -1,3 +1,4 @@
+//C:\Users\hp\Desktop\Job-Posting-and-Searching-Platform\client\src\pages\SignUp.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/SignUp.css';

@@ -1,3 +1,4 @@
+//C:\Users\hp\Desktop\Job-Posting-and-Searching-Platform\client\src\pages\UserHomePage.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Use useNavigate instead of useHistory
 import Sidebar from '../components/Sidebar';

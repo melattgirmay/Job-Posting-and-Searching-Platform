@@ -1,5 +1,4 @@
-// PostJob.js
-
+// C:\Users\hp\Desktop\Job-Posting-and-Searching-Platform\client\src\pages\PostJobPage.js
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../axiosConfig'; // Import the configured axios instance
 import Sidebar from '../components/Sidebar';

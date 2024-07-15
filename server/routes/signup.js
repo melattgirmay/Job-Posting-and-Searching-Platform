@@ -1,5 +1,4 @@
-// Job-Posting-and-Searching-Platform\server\routes\signup.js
-const express = require('express');
+// C:\Users\hp\Desktop\Job-Posting-and-Searching-Platform\server\routes\signup.js
 const router = express.Router();
 const db = require('../db');
 

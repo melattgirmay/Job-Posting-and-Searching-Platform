@@ -1,3 +1,4 @@
+//C:\Users\hp\Desktop\Job-Posting-and-Searching-Platform\client\src\axiosConfig.js
 import axios from 'axios';
 
 const getToken = () => {

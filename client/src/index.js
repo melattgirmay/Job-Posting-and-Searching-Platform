@@ -1,4 +1,4 @@
-// Job-Posting-and-Searching-Platform\client\src\index.js 
+// C:\Users\hp\Desktop\Job-Posting-and-Searching-Platform\client\src\index.js
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';

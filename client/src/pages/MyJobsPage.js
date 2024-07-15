@@ -1,4 +1,4 @@
-// Job-Posting-and-Searching-Platform\client\src\pages\MyJobsPage.js
+//C:\Users\hp\Desktop\Job-Posting-and-Searching-Platform\client\src\pages\MyJobsPage.js
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';

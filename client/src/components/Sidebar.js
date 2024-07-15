@@ -1,3 +1,4 @@
+//C:\Users\hp\Desktop\Job-Posting-and-Searching-Platform\client\src\components\Sidebar.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHome, FaSearch, FaCalendar, FaSignOutAlt } from 'react-icons/fa';

@@ -1,3 +1,4 @@
+//C:\Users\hp\Desktop\Job-Posting-and-Searching-Platform\client\src\App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';

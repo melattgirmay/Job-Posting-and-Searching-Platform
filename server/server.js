@@ -1,3 +1,4 @@
+// C:\Users\hp\Desktop\Job-Posting-and-Searching-Platform\server\server.js
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2');

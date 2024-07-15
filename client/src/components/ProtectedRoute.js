@@ -1,3 +1,4 @@
+//C:\Users\hp\Desktop\Job-Posting-and-Searching-Platform\client\src\components\ProtectedRoute.js
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 

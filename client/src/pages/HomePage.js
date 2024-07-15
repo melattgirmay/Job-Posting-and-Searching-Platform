@@ -1,4 +1,4 @@
-// Job-Posting-and-Searching-Platform\client\src\pages\HomePage.js
+///C:\Users\hp\Desktop\Job-Posting-and-Searching-Platform\client\src\pages\HomePage.js
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/HomePage.css';

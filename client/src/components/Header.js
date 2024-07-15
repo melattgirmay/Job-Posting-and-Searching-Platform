@@ -1,3 +1,4 @@
+//C:\Users\hp\Desktop\Job-Posting-and-Searching-Platform\client\src\components\Header.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaAngleDoubleUp, FaAngleDoubleDown } from 'react-icons/fa';

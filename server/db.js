@@ -1,4 +1,4 @@
-// Job-Posting-and-Searching-Platform\server\db.js
+// C:\Users\hp\Desktop\Job-Posting-and-Searching-Platform\server\db.js
 const mysql = require('mysql2');
 const dotenv = require('dotenv');
 
