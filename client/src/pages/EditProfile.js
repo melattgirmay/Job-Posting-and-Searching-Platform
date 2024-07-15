@@ -6,12 +6,12 @@ const EditProfile = ({ email }) => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
     firstName: '',
+    middleName: '',
     lastName: '',
     email: '',
     phoneNumber: '',
-    city: '',
-    state: '',
     country: '',
+    city: '',
     resumeLink: '',
     education: [{
       collegeName: '',
@@ -102,19 +102,22 @@ const EditProfile = ({ email }) => {
 
   const handleChange = (e, index = null, section = null) => {
     const { name, value, type, checked } = e.target;
+  
     if (section) {
       const newSection = [...userData[section]];
       newSection[index][name] = type === 'checkbox' ? checked : value;
       setUserData({ ...userData, [section]: newSection });
     } else if (name === 'technicalSkills' || name === 'softSkills' || name === 'languages') {
+      const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
+  
       setUserData(prevState => ({
         ...prevState,
-        [name]: Array.from(e.target.selectedOptions, option => option.value),
+        [name]: [...prevState[name], ...selectedOptions.filter(option => !prevState[name].includes(option))]
       }));
     } else {
       setUserData({ ...userData, [name]: value });
     }
-  };
+  };  
 
   const handleSkillChange = (selectedSkills, skillType) => {
     setUserData(prevState => ({
@@ -213,6 +216,13 @@ const EditProfile = ({ email }) => {
               />
               <input
                 type="text"
+                name="middleName"
+                placeholder="Middle Name"
+                value={userData.middleName}
+                onChange={handleChange}
+              />
+              <input
+                type="text"
                 name="lastName"
                 placeholder="Last Name"
                 value={userData.lastName}
@@ -226,7 +236,6 @@ const EditProfile = ({ email }) => {
                 placeholder="Email"
                 value={userData.email}
                 onChange={handleChange}
-                disabled
               />
               <input
                 type="tel"
@@ -237,25 +246,18 @@ const EditProfile = ({ email }) => {
               />
             </div>
             <div className="form-row">
+            <input
+                type="text"
+                name="country"
+                placeholder="Country"
+                value={userData.country}
+                onChange={handleChange}
+              />
               <input
                 type="text"
                 name="city"
                 placeholder="City"
                 value={userData.city}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="state"
-                placeholder="State/Province"
-                value={userData.state}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="country"
-                placeholder="Country"
-                value={userData.country}
                 onChange={handleChange}
               />
             </div>
@@ -367,34 +369,35 @@ const EditProfile = ({ email }) => {
 
           {/* Skills */}
           <div className="form-section">
-            <h3>Skills</h3>
-            <div className="form-row">
-              <select
-                multiple
-                value={userData.technicalSkills}
-                onChange={(e) => handleChange(e)}
-                name="technicalSkills"
-              >
-                {availableTechnicalSkills.map((skill, index) => (
-                  <option key={index} value={skill}>{skill}</option>
-                ))}
-              </select>
-              <input
-                type="text"
-                placeholder="Other Technical Skill"
-                value={userData.othertechskill}
-                onChange={(e) => handleOtherSkillChange(e, 'othertechskill')}
-              />
-              <button type="button" onClick={() => addOtherSkill('technicalSkills', 'othertechskill')}>Add</button>
-            </div>
+            <h3>Technical Skills</h3>
+              <div className="form-row">
+                <select
+                  multiple
+                  value={userData.technicalSkills}
+                  onChange={(e) => handleChange(e)}
+                  name="technicalSkills"
+                >
+                  {availableTechnicalSkills.map((skill, index) => (
+                    <option key={index} value={skill}>{skill}</option>
+                  ))}
+                </select>
+                <input
+                  type="text"
+                  placeholder="Other Technical Skill"
+                  value={userData.othertechskill}
+                  onChange={(e) => handleOtherSkillChange(e, 'othertechskill')}
+                />
+                <button  className="remove-skill" type="button" onClick={() => addOtherSkill('technicalSkills', 'othertechskill')}>Add</button>
+              </div>
             <div>
               {userData.technicalSkills.map((skill, index) => (
-                <span key={index}>
+                <span key={index} className="skill-item">
                   {skill}
-                  <button type="button" onClick={() => removeSkill(skill, 'technicalSkills')}>Remove</button>
+                  <button type="button" className="remove-skill" onClick={() => removeSkill(skill, 'technicalSkills')}>X</button>
                 </span>
               ))}
             </div>
+
             <div className="form-row">
               <select
                 multiple
@@ -412,16 +415,17 @@ const EditProfile = ({ email }) => {
                 value={userData.othersoftskill}
                 onChange={(e) => handleOtherSkillChange(e, 'othersoftskill')}
               />
-              <button type="button" onClick={() => addOtherSkill('softSkills', 'othersoftskill')}>Add</button>
+              <button className="remove-skill" type="button" onClick={() => addOtherSkill('softSkills', 'othersoftskill')}>Add</button>
             </div>
             <div>
               {userData.softSkills.map((skill, index) => (
-                <span key={index}>
+                <span key={index} className="skill-item">
                   {skill}
-                  <button type="button" onClick={() => removeSkill(skill, 'softSkills')}>Remove</button>
+                  <button type="button" className="remove-skill" onClick={() => removeSkill(skill, 'softSkills')}>X</button>
                 </span>
               ))}
             </div>
+
             <div className="form-row">
               <select
                 multiple
@@ -439,23 +443,170 @@ const EditProfile = ({ email }) => {
                 value={userData.otherlanguage}
                 onChange={(e) => handleOtherSkillChange(e, 'otherlanguage')}
               />
-              <button type="button" onClick={() => addOtherSkill('languages', 'otherlanguage')}>Add</button>
+              <button className="remove-skill" type="button" onClick={() => addOtherSkill('languages', 'otherlanguage')}>Add</button>
             </div>
             <div>
               {userData.languages.map((language, index) => (
-                <span key={index}>
+                <span key={index} className="skill-item">
                   {language}
-                  <button type="button" onClick={() => removeSkill(language, 'languages')}>Remove</button>
+                  <button type="button" className="remove-skill" onClick={() => removeSkill(language, 'languages')}>X</button>
                 </span>
               ))}
             </div>
           </div>
 
-          {/* Submit Button */}
           <div className="form-section">
-            <button type="submit">Save Changes</button>
-            {message && <p>{message}</p>}
+            <h3>Professional Certifications</h3>
+            <div className="form-row">
+              <input
+                type="text"
+                name="certifications"
+                placeholder="Certifications"
+                value={userData.certifications}
+                onChange={handleChange}
+              />
+            </div>
           </div>
+
+          <div className="form-section">
+            <h3>Honors and Awards</h3>
+            <input
+              type="text"
+              name="honorsAwards"
+              placeholder="Honors and Awards"
+              value={userData.honorsAwards}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-section">
+            <h3>Portfolio</h3>
+            <input
+              type="url"
+              name="portfolioLink"
+              placeholder="Portfolio Link"
+              value={userData.portfolioLink}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-section">
+            <h3>Employment Status</h3>
+            <div className="form-row">
+              <label>
+                <input
+                  type="radio"
+                  name="employmentStatus"
+                  value="Employed"
+                  checked={userData.employmentStatus === 'Employed'}
+                  onChange={handleChange}
+                />
+                Employed
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="employmentStatus"
+                  value="Unemployed"
+                  checked={userData.employmentStatus === 'Unemployed'}
+                  onChange={handleChange}
+                />
+                Unemployed
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="employmentStatus"
+                  value="Student"
+                  checked={userData.employmentStatus === 'Student'}
+                  onChange={handleChange}
+                />
+                Student
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="employmentStatus"
+                  value="Freelancer"
+                  checked={userData.employmentStatus === 'Freelancer'}
+                  onChange={handleChange}
+                />
+                Freelancer
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="employmentStatus"
+                  value="Retired"
+                  checked={userData.employmentStatus === 'Retired'}
+                  onChange={handleChange}
+                />
+                Retired
+              </label>
+            </div>
+            {userData.employmentStatus === 'Employed' && (
+              <div className="form-row">
+                <label>
+                  <input
+                    type="radio"
+                    name="workType"
+                    value="Own Business"
+                    checked={userData.workType === 'Own Business'}
+                    onChange={handleChange}
+                  />
+                  Own Business
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="workType"
+                    value="Company"
+                    checked={userData.workType === 'Company'}
+                    onChange={handleChange}
+                  />
+                  Company
+                </label>
+              </div>
+            )}
+            {userData.workType === 'Company' && (
+              <div className="form-row">
+                <input
+                  type="text"
+                  name="companyName"
+                  placeholder="Company Name"
+                  value={userData.companyName}
+                  onChange={handleChange}
+                />
+              </div>
+            )}
+            {userData.employmentStatus === 'Employed' && (
+              <div className="form-row">
+                <label>
+                  <input
+                    type="radio"
+                    name="jobSearchStatus"
+                    value="Looking for a job"
+                    checked={userData.jobSearchStatus === 'Looking for a job'}
+                    onChange={handleChange}
+                  />
+                  Looking for a job
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="jobSearchStatus"
+                    value="Not looking for a job"
+                    checked={userData.jobSearchStatus === 'Not looking for a job'}
+                    onChange={handleChange}
+                  />
+                  Not looking for a job
+                </label>
+              </div>
+            )}
+          </div>
+
+          <button type="submit">Update Profile</button>
+          {message && <p className="success-message">{message}</p>}
         </form>
       </div>
       <div className='profile-wrapper'>
@@ -476,5 +627,3 @@ const EditProfile = ({ email }) => {
 };
 
 export default EditProfile;
-
-

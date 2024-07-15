@@ -132,3 +132,41 @@ p {
   cursor: pointer;
   margin-left: 5px;
 }
+
+/* EditProfile.css */
+
+
+
+.skill-item {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+}
+
+.skill-item {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.remove-skill {
+  background-color: #2584be;
+  border: none;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  margin-left: 5px;
+  width: auto;
+  position: relative;
+  bottom: 10px;
+  left: 5px;
+}
+
+.remove-skill:hover {
+  background-color: #2584be;
+}
