@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../axiosConfig';
 import '../styles/EditProfile.css';  // Ensure this CSS file contains appropriate styling
 
 const EditProfile = () => {
@@ -31,29 +30,6 @@ const EditProfile = () => {
 
   useEffect(() => {
     // Fetch user data from backend API
-    axiosInstance.get('/api/user')
-      .then(response => {
-        const { firstName, middleName, lastName, email, phoneNumber, gender, technicalSkills, softSkills, languages, resumeCV, portfolio } = response.data;
-        setUserData({
-          firstName,
-          middleName,
-          lastName,
-          email,
-          phoneNumber,
-          gender,
-          technicalSkills,
-          softSkills,
-          languages,
-          resumeCV,
-          portfolio
-        });
-        setSelectedTechnicalSkills(technicalSkills); // Directly set arrays
-        setSelectedSoftSkills(softSkills);
-        setSelectedLanguages(languages);
-      })
-      .catch(error => {
-        console.error('Error fetching user data:', error);
-      });
   }, []);
 
   const handleChange = e => {
@@ -116,22 +92,7 @@ const EditProfile = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    // Submit updated user data to backend
-    axiosInstance.put('/api/user/update', {
-      ...userData,
-      technicalSkills: selectedTechnicalSkills,
-      softSkills: selectedSoftSkills,
-      languages: selectedLanguages
-    })
-      .then(response => {
-        console.log('Profile updated successfully:', response.data);
-        // Optionally, show a success message or redirect to user profile page
-        navigate('/profile');  // Example redirect after successful update
-      })
-      .catch(error => {
-        console.error('Error updating profile:', error);
-        // Handle error, e.g., display error message to user
-      });
+
   };
 
   return (

@@ -7,15 +7,7 @@
   background: white;
 }
 
-form {
-  width: 65%;
-  margin: 10px;
-  overflow-y: auto;
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+
 
 .profile-wrapper {
   width: 27%;

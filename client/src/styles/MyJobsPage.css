@@ -1,12 +1,20 @@
 
 .my-jobs-page {
-    font-family: 'Arial, sans-serif';
-    padding: 20px;
-    padding-top: 5px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    display: flex;
-    flex-direction: column;
-    height: 100vh; /* Set full viewport height */
-    overflow: hidden; /* Hide overflow to prevent double scrollbars */
-  }
+  display: flex;
+  flex-direction: column;
+  margin: 50px;
+  justify-content: center;
+}
+
+.posted-jobs, .saved-jobs {
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5%;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  cursor: pointer;
+  box-shadow: 0 0 10px 5px rgb(216, 200, 200); /* Optional margin-bottom to separate job cards */
+}

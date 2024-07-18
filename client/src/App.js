@@ -10,6 +10,8 @@ import JobSearchPage from './pages/JobSearchPage';
 import MyJobsPage from './pages/MyJobsPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import PostJobPage from './pages/PostJobPage';
+import MyPostedJobs from './pages/MyPostedJobs';
+import MySavedJobs from './pages/MySavedJobs';
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/job-search" element={<JobSearchPage />} />
         <Route path="/my-jobs" element={<MyJobsPage />} />
+        <Route path="/my-posted-jobs" element={<MyPostedJobs />} />
+        <Route path="/my-saved-jobs" element={<MySavedJobs />} />
       </Routes>
     </Router>
   );

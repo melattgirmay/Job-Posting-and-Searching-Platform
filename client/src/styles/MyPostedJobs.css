@@ -1,0 +1,131 @@
+.user-homepage {
+    display: flex;
+    max-height: 100vh;
+    font-family: serif;
+  }
+  
+  .main-content {
+    flex-grow: 1;
+  }
+  
+  .my-posted-jobs {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+  }
+  
+  .my-posted-jobs h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    margin-top: 30px;
+  }
+  
+  .job-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .job-item {
+    margin-bottom: 20px;
+  }
+  
+  .edit-job-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .edit-job-form input,
+  .edit-job-form textarea {
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .edit-job-form button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .preview-card {
+    min-width: fit-content;
+    max-width: fit-content;
+    background-color: #ffffff;
+    font-size: 18px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px 2px #2596bed8;
+    padding: 25px;
+    margin-bottom: 20px;
+    text-decoration: none;
+  }
+  
+  .preview-card h1 {
+    font-size: 30px !important;
+  }
+  
+  .preview-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .preview-date {
+    font-size: 18px;
+    color: black;
+  }
+  
+  .preview-salary,
+  .preview-location {
+    color: white;
+  }
+  
+  .preview-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: black;
+  }
+  
+  .preview-tags {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .preview-tag {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: #2596be !important;
+  }
+  
+  .preview-card-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .preview-salary,
+  .preview-location {
+    font-size: 18px;
+    color: black;
+  }
+  
+  .toback-link {
+    position: fixed;
+    width: 6%;
+    background: none;
+    color: #2584be !important;
+  }
+  
+  .toback-link:hover {
+    transform: scale(1.2);
+    background: none;
+  }

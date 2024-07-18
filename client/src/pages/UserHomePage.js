@@ -70,7 +70,7 @@ const UserHomePage = () => {
           </div>
           <div className="stats">
             <div className="stat-card">
-              <h4>Applied Jobs</h4>
+              <h4>Accepted Jobs</h4>
               <p className="stat-number" data-progress="50">50</p>
               <p>During 3 months</p>
             </div>

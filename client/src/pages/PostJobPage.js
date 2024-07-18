@@ -45,7 +45,7 @@ const StyledButton = styled.button`
 
   &:hover {
     background-color: #2596be;
-    transform: scale(1.2);
+    transform: scale(0.8);
   }
 `;
 
@@ -60,7 +60,7 @@ const PostJob = () => {
     description: '',
     responsibilities: '',
     requirements: '',
-    remoteOption: 'Remote',
+    remote_option: 'Remote',
   });
 
   const [previewJob, setPreviewJob] = useState(null); // State to hold preview job data
@@ -217,8 +217,8 @@ const PostJob = () => {
                   required
                 ></StyledTextarea>
                 <StyledSelect
-                  name="remoteOption"
-                  value={jobDetails.remoteOption}
+                  name="remote_option"
+                  value={jobDetails.remote_option}
                   onChange={handleChange}
                 >
                   <option value="Remote">Remote</option>
@@ -248,7 +248,7 @@ const PostJob = () => {
                   <div className="preview-tags">
                     <span className="preview-tag">{previewJob.type}</span>
                     <span className="preview-tag">{previewJob.level}</span>
-                    <span className="preview-tag">{previewJob.remoteOption}</span>
+                    <span className="preview-tag">{previewJob.remote_option}</span>
                   </div>
                   <div className="preview-card-footer">
                     <span className="preview-salary">Salary: Birr {previewJob.salary}</span>

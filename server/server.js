@@ -48,7 +48,7 @@ db.on('error', (err) => {
 
 // Endpoint to search for a job
 app.get('/api/searchJobs', async (req, res) => {
-  const { title, location, createdAt, salary, type, remoteOption, level } = req.query;
+  const { title, location, createdAt, salary, type, remote_option, level } = req.query;
 
   let query = 'SELECT * FROM jobs WHERE 1=1';
   const values = [];
@@ -73,9 +73,9 @@ app.get('/api/searchJobs', async (req, res) => {
     query += ' AND type LIKE ?';
     values.push(`%${type}%`);
   }
-  if (remoteOption) {
+  if (remote_option) {
     query += ' AND remote_option LIKE ?';
-    values.push(`%${remoteOption}%`);
+    values.push(`%${remote_option}%`);
   }
   if (level) {
     query += ' AND level LIKE ?';
@@ -88,6 +88,20 @@ app.get('/api/searchJobs', async (req, res) => {
   } catch (err) {
     console.error('Error searching jobs:', err);
     res.status(500).json({ message: 'Failed to search jobs' });
+  }
+});
+
+// Endpoint to fetch jobs posted by the logged-in user
+app.get('/api/myJobs', checkLoggedIn, async (req, res) => {
+  const userId = req.session.userId; // Assuming userId is stored in the session
+
+  const query = 'SELECT * FROM jobs WHERE userId = ?';
+  try {
+    const [results] = await db.promise().query(query, [userId]);
+    res.status(200).json(results);
+  } catch (err) {
+    console.error('Error fetching user jobs:', err);
+    res.status(500).json({ message: 'Failed to fetch user jobs' });
   }
 });
 
@@ -115,13 +129,31 @@ app.get('/api/jobs/:jobId', async (req, res) => {
   }
 });
 
+
+// Endpoint to update a job
+app.put('/api/jobs/:jobId', checkLoggedIn, async (req, res) => {
+  const jobId = req.params.jobId;
+  const { title, location, type, level, salary, description, responsibilities, requirements, remote_option } = req.body;
+  
+  const query = 'UPDATE jobs SET title = ?, location = ?, type = ?, level = ?, salary = ?, description = ?, responsibilities = ?, requirements = ?, remote_option = ? WHERE id = ?';
+  const values = [title, location, type, level, salary, description, responsibilities, requirements, remote_option, jobId];
+  
+  try {
+    await db.promise().query(query, values);
+    res.status(200).send('Job updated successfully');
+  } catch (err) {
+    console.error('Error updating job:', err);
+    res.status(500).send('Failed to update job');
+  }
+});
+
 // Endpoint to post a job
 app.post('/api/postJob', checkLoggedIn, async (req, res) => {
-  const { title, location, type, level, salary, description, responsibilities, requirements, remoteOption } = req.body;
+  const { title, location, type, level, salary, description, responsibilities, requirements, remote_option } = req.body;
   const userId = req.session.userId; // Assuming userId is stored in session
 
   const query = 'INSERT INTO jobs (title, location, type, level, salary, description, responsibilities, requirements, remote_option, userId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-  const values = [title, location, type, level, salary, description, responsibilities, requirements, remoteOption, userId];
+  const values = [title, location, type, level, salary, description, responsibilities, requirements, remote_option, userId];
 
   try {
     await db.promise().query(query, values); // Assuming you are using mysql2's promise mode
@@ -142,13 +174,13 @@ function checkLoggedIn(req, res, next) {
 
 // Endpoint to handle user signup
 app.post('/api/signup', async (req, res) => {
-  const { firstName, middleName, lastName, email, phoneNumber, location, password, gender } = req.body;
+  const { firstName, middleName, lastName, email, phoneNumber, password, gender } = req.body;
 
   // Hash the password before storing
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const query = 'INSERT INTO users (firstName, middleName, lastName, email, phoneNumber, location, password, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-  const values = [firstName, middleName, lastName, email, phoneNumber, location, hashedPassword, gender];
+  const query = 'INSERT INTO users (firstName, middleName, lastName, email, phoneNumber, password, gender) VALUES (?, ?, ?, ?, ?, ?, ?)';
+  const values = [firstName, middleName, lastName, email, phoneNumber, hashedPassword, gender];
 
   db.query(query, values, (err, result) => {
     if (err) {
@@ -251,6 +283,24 @@ const isAuthenticated = (req, res, next) => {
 app.get('/userhomepage', isAuthenticated, (req, res) => {
   // Serve the userhomepage when authenticated
   res.sendFile(path.join(__dirname, 'public', 'userhomepage.html'));
+});
+
+// Endpoint to fetch job details by ID
+app.get('/api/jobs/:jobId', async (req, res) => {
+  const jobId = req.params.jobId;
+
+  const query = 'SELECT * FROM jobs WHERE id = ?';
+  try {
+    const [results] = await db.promise().query(query, [jobId]);
+    if (results.length > 0) {
+      res.status(200).json(results[0]);
+    } else {
+      res.status(404).json({ message: 'Job not found' });
+    }
+  } catch (err) {
+    console.error('Error fetching job details:', err);
+    res.status(500).json({ message: 'Failed to fetch job details' });
+  }
 });
 
 // Start the server
